@@ -1,0 +1,6 @@
+/Users/glau/Documents/Github/apache-flink-examples/userClickEvents/src/main/java/com/acmecorp/StreamingJob.java
+/Users/glau/Documents/Github/apache-flink-examples/userClickEvents/src/main/java/com/acmecorp/provided/UserClickEvent.java
+/Users/glau/Documents/Github/apache-flink-examples/userClickEvents/src/main/java/com/acmecorp/provided/TransformFunction.java
+/Users/glau/Documents/Github/apache-flink-examples/userClickEvents/src/main/java/com/acmecorp/provided/EventAccumulator.java
+/Users/glau/Documents/Github/apache-flink-examples/userClickEvents/src/main/java/com/acmecorp/provided/CountUserEvents.java
+/Users/glau/Documents/Github/apache-flink-examples/userClickEvents/src/main/java/com/acmecorp/provided/ClickEventGenerator.java

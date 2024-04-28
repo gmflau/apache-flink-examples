@@ -1,0 +1,9 @@
+com/acmecorp/provided/CountUserEvents.class
+com/acmecorp/provided/ClickEventGenerator$1.class
+com/acmecorp/provided/ClickEventGenerator.class
+com/acmecorp/provided/TransformFunction.class
+com/acmecorp/StreamingJob.class
+com/acmecorp/provided/ClickEventGenerator$AuthenticatedUser.class
+com/acmecorp/provided/ClickEventGenerator$User.class
+com/acmecorp/provided/UserClickEvent.class
+com/acmecorp/provided/EventAccumulator.class

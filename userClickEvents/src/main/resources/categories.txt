@@ -1,0 +1,6 @@
+clothes
+shoes
+home_essentials
+eyewears
+kitchen_n_things
+bedroom_essentials
