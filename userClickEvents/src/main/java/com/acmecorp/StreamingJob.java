@@ -82,7 +82,7 @@ public class StreamingJob {
                 .build();
 		userEventCountsLessThanTen.sinkTo(sinkLessThanTen);
 		
-		env.execute("Streaming Analytics");
+		env.execute("User Click Events");
 		System.out.println("Leaving StreamingJob");
 	}
 
