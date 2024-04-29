@@ -16,10 +16,6 @@ public EventAccumulator add(UserClickEvent event, EventAccumulator accumulator) 
     return accumulator;
 }
 
-//public Tuple2<Long, Long> getResult(EventAccumulator accumulator) {
-//	return new Tuple2<Long, Long>(accumulator.userAccountId, accumulator.count);
-//}
-
 public Tuple2<Long, Long> getResult(EventAccumulator accumulator) {
 
     return new Tuple2(accumulator.userAccountId, accumulator.count);

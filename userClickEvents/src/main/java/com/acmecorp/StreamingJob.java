@@ -21,7 +21,7 @@ import org.apache.flink.connector.file.sink.FileSink;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.DefaultRollingPolicy;
 import org.apache.flink.api.java.tuple.Tuple2;
 import java.time.Duration;
-
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 
 public class StreamingJob {
 
@@ -41,8 +41,14 @@ public class StreamingJob {
 		DataStream<UserClickEvent> objectStream = input.map(transformFunction);
 		//objectStream.print();
 
-		DataStream<Tuple2<Long, Long>> userEventCounts = 
-		objectStream
+		// Use watermark strategy to leverage a timestamp field of events
+		WatermarkStrategy<UserClickEvent> watermarkStrategy = WatermarkStrategy
+			.<UserClickEvent>forBoundedOutOfOrderness(Duration.ofSeconds(5))
+			.withTimestampAssigner((event, timestamp) -> event.hostTimestamp);
+
+		DataStream<UserClickEvent> wm_objectstream = objectStream.assignTimestampsAndWatermarks(watermarkStrategy);
+
+		DataStream<Tuple2<Long, Long>> userEventCounts = wm_objectstream
 			.keyBy(event -> event.userAccountId)
 			.window(TumblingProcessingTimeWindows.of(Time.minutes(1)))
 			.aggregate(new CountUserEvents());
