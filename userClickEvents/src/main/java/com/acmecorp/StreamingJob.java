@@ -11,7 +11,7 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.watermark.Watermark; 
 import org.apache.flink.streaming.api.operators.AbstractStreamOperator; 
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
+import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.connector.file.sink.FileSink;
 import org.apache.flink.core.fs.Path;
@@ -22,6 +22,8 @@ import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.
 import org.apache.flink.api.java.tuple.Tuple2;
 import java.time.Duration;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.streaming.api.windowing.triggers.EventTimeTrigger;
+
 
 public class StreamingJob {
 
@@ -31,7 +33,7 @@ public class StreamingJob {
 
 		System.out.println("Reached StreamingJob");
 
-		env.enableCheckpointing(10000L);
+		//env.enableCheckpointing(10000L);
 		DataStream<String> input = env.addSource(new ClickEventGenerator(pt));
 
 		// Define a function to transform string to object
@@ -45,23 +47,22 @@ public class StreamingJob {
 		WatermarkStrategy<UserClickEvent> watermarkStrategy = WatermarkStrategy
 			.<UserClickEvent>forBoundedOutOfOrderness(Duration.ofSeconds(5))
 			.withTimestampAssigner((event, timestamp) -> event.hostTimestamp);
-
 		DataStream<UserClickEvent> wm_objectstream = objectStream.assignTimestampsAndWatermarks(watermarkStrategy);
 
-		DataStream<Tuple2<Long, Long>> userEventCounts = wm_objectstream
+		// Remove all unauthenticated visitor actions
+		DataStream<UserClickEvent> filtered_wm_objectstream = wm_objectstream.filter(value -> value.userAccountId != -1);
+
+		DataStream<Tuple2<Long, Long>> userEventCounts = filtered_wm_objectstream
 			.keyBy(event -> event.userAccountId)
-			.window(TumblingProcessingTimeWindows.of(Time.minutes(1)))
+			.window(SlidingEventTimeWindows.of(Time.minutes(10), Time.minutes(1)))
 			.aggregate(new CountUserEvents());
 
 		//userEventCounts.print();
 
-		DataStream<Tuple2<Long, Long>> userEventCountsGreaterThanNine = userEventCounts.filter(value ->  value.f1 > 9);
-
-		//userEventCountsGreaterThanNine.print();
-
-		DataStream<Tuple2<Long, Long>> userEventCountsLessThanTen = userEventCounts.filter(value ->  value.f1 < 10);
-
-		//userEventCountsLessThanTen.print();
+		// Create one stream for the number of user clicks is 10 or more
+		// Create another stream for the number of user clicks is less than 10
+		DataStream<Tuple2<Long, Long>> userEventCountsGreaterThanNine = userEventCounts.filter(value -> value.f1 > 9);
+		DataStream<Tuple2<Long, Long>> userEventCountsLessThanTen = userEventCounts.filter(value -> value.f1 < 10);
 
 		// Saving user click events on files
 		String outputPathForTenPlus = "/Users/glau/Documents/Flink/UserEvents/output/userevents_10plus";
