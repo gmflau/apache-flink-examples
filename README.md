@@ -14,11 +14,11 @@ For userClickEvents:
 ```bash
 cd userClickEvents
 ```
-Edit and update this [line](https://github.com/gmflau/apache-flink-examples/blob/main/userClickEvents/src/main/java/com/acmecorp/StreamingJob.java#L67) to reflect your local directory:
+Edit and update this [line](https://github.com/gmflau/apache-flink-examples/blob/main/userClickEvents/src/main/java/com/acmecorp/StreamingJob.java#L68) to reflect your local directory:
 ```
 String outputPathForTenPlus = "/Users/glau/Documents/Flink/UserEvents/output/userevents_10plus";
 ```
-Edit and update this [line](https://github.com/gmflau/apache-flink-examples/blob/main/userClickEvents/src/main/java/com/acmecorp/StreamingJob.java#L79) to reflect your local directory:
+Edit and update this [line](https://github.com/gmflau/apache-flink-examples/blob/main/userClickEvents/src/main/java/com/acmecorp/StreamingJob.java#L80) to reflect your local directory:
 ```
 String outputPathForLessThanTen = "/Users/glau/Documents/Flink/UserEvents/output/userevents_less_than_10";
 ```
